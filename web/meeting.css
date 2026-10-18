@@ -1,0 +1,142 @@
+/* Meeting room is intentionally separate from the topic library and recap. */
+body.meeting-mode{background:#101416;color:#ecf0ee}
+.meeting-mode .sidebar,.meeting-mode .topbar,.meeting-mode .workspace>footer{display:none}
+.meeting-mode .workspace{margin:0;width:100%}
+.meeting-mode main{padding:0;max-width:none}
+.meeting-mode #roomView{height:100dvh;min-height:620px;display:flex;flex-direction:column;background:#101416;font-family:Arial,Helvetica,sans-serif}
+.meeting-header{height:88px;flex-shrink:0;border-bottom:1px solid #ffffff12;padding:0 30px;display:flex;align-items:center;justify-content:space-between;gap:20px;background:#14191b}
+.meeting-brand{display:flex;align-items:center;gap:12px;min-width:0}
+.meeting-brand>span{font-size:22px;font-weight:700;letter-spacing:-1px;white-space:nowrap}
+.meeting-brand>span>span{font-weight:400;color:#bfc9c4}
+.meeting-brand .room-divider{height:32px;width:1px;background:#ffffff1a;margin:0 12px}
+.meeting-brand>div{min-width:0}
+.meeting-eyebrow{font-size:9px;letter-spacing:1.9px;color:#9ca9a2}
+.meeting-header h1{font-family:inherit;font-size:18px;letter-spacing:-.3px;font-weight:500;line-height:1.4;margin:5px 0 0;color:#f1f3f1}
+.meeting-meta{display:flex;gap:18px;align-items:center;flex-shrink:0}
+.practice-pill{display:flex;gap:8px;align-items:center;font-size:11px;color:#c4cfc7}
+.practice-pill i,.live-dot{display:inline-block;width:6px;height:6px;background:#b9da88;border-radius:50%}
+.meeting-meta .timer{background:#222b2a;color:#e1e8e2;border:1px solid #ffffff10;border-radius:8px;padding:10px 13px;font-size:14px}
+.meeting-meta .timer.urgent{background:#56372b;color:#ffdcbd}
+.meeting-body{flex:1;min-height:0;display:flex;gap:0;position:relative}
+.meeting-stage{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;padding:22px 30px 16px;overflow:auto}
+.stage-heading{display:flex;justify-content:space-between;align-items:center;margin:0 0 16px;font-size:12px;flex-shrink:0}
+.stage-heading>span:first-child{display:flex;align-items:center;gap:9px;font-weight:600}
+.stage-heading small{color:#92a198;font-weight:400;font-size:11px;border-left:1px solid #ffffff1a;padding-left:10px;margin-left:5px}
+.stage-heading>span:last-child{font-size:8px;letter-spacing:1.5px;color:#8c9b92}
+#roomView .participants{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(160px,1fr));gap:14px;flex:1;min-height:340px;margin:0}
+#roomView .participant{position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;isolation:isolate;min-width:0;border:1px solid #ffffff12;border-radius:13px;padding:0;background:#202b2b;text-align:center;transition:border-color .2s}
+#roomView .participant:before{content:"";position:absolute;width:280px;height:280px;border:1px solid #ffffff04;border-radius:50%;z-index:-1;pointer-events:none}
+#roomView .participant:after{content:"";position:absolute;width:380px;height:380px;border:1px solid #ffffff03;border-radius:50%;z-index:-1;pointer-events:none}
+#roomView .participant.you{background:radial-gradient(ellipse at 50% 30%,#2d4040,#223030 70%)}
+#roomView .participant.aanya-tile{background:radial-gradient(ellipse at 50% 30%,#403849,#2b2632 70%)}
+#roomView .participant.kabir-tile{background:radial-gradient(ellipse at 50% 30%,#3d3c30,#2d2e26 70%)}
+#roomView .participant.riya-tile{background:radial-gradient(ellipse at 50% 30%,#35424d,#25313a 70%)}
+#roomView .participant.latest{border-color:#7d9680}
+#roomView .participant.speaking,#roomView .participant.listening{border:2px solid #b4db8d;box-shadow:0 0 0 2px #b4db8d15}
+.tile-identity{display:flex;flex-direction:column;align-items:center;gap:9px;margin-bottom:18px;z-index:1}
+#roomView .participant .avatar{width:72px;height:72px;font-size:29px;font-weight:400;border:1px solid #ffffff19;box-shadow:0 7px 25px #00000012;margin:0}
+#roomView .participant .you-avatar{background:#7caaa0;color:#112f2e}
+#roomView .participant .aanya{background:#b7a4c6;color:#392941}
+#roomView .participant .kabir{background:#c5bd8b;color:#3f3a23}
+#roomView .participant .riya{background:#94b2cb;color:#213d53}
+.tile-identity h2{font-size:16px;font-weight:500;margin:0;color:#eaf0eb}
+.tile-identity p{font-size:10px;color:#a4b1aa;margin:0}
+#roomView .tile-badge{position:absolute;top:13px;right:13px;font-size:9px;letter-spacing:.2px;color:#bdc8c1;background:#10171660;border:1px solid #ffffff0c;border-radius:5px;padding:5px 8px;z-index:3}
+.tile-bottom{position:absolute;bottom:0;left:0;right:0;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(transparent,#0a0e104d);z-index:2;text-align:left}
+#roomView .tile-bottom>div>strong{font-size:12px;font-weight:500;color:#edf1ed;display:block}
+#roomView .tile-bottom strong small{display:inline-block;font-size:7px;background:#ffffff14;color:#c7d4cc;margin-left:6px;padding:3px 5px;letter-spacing:.5px;border-radius:3px}
+#roomView .tile-bottom>div>span{display:block;font-size:9px;color:#aebdb4;margin-top:5px}
+#roomView .wave{display:flex;gap:3px;height:18px;align-items:center;opacity:.35;margin:0}
+#roomView .wave i{background:#a5beb3;height:5px;width:3px;animation:none;border-radius:3px}
+#roomView .speaking .wave,#roomView .listening .wave{opacity:1}
+#roomView .speaking .wave i,#roomView .listening .wave i{animation:meeting-wave .8s infinite alternate;background:#c4e89e}
+#roomView .wave i:nth-child(2){animation-delay:.2s}#roomView .wave i:nth-child(3){animation-delay:.4s}#roomView .wave i:nth-child(4){animation-delay:.6s}
+@keyframes meeting-wave{to{height:17px}}
+#localVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1);z-index:1}
+.camera-on .tile-identity{visibility:hidden}
+.meeting-caption{flex-shrink:0;display:flex;align-items:flex-start;gap:16px;background:#1a2222;border:1px solid #ffffff09;border-radius:9px;padding:13px 17px;margin-top:16px;max-height:125px;overflow:auto}
+.meeting-caption>span{color:#c2dcad;font-size:10px;min-width:100px;max-width:140px;line-height:1.7}
+.meeting-caption p{font-size:12px;line-height:1.7;margin:0;color:#d0d9d3;flex:1}
+.stage-note{display:flex;justify-content:space-between;font-size:9px;color:#82958a;margin-top:10px;gap:15px}
+.meeting-status{display:flex;align-items:center;flex-wrap:wrap;gap:6px 16px;flex-shrink:0}
+.meeting-status .speech-engine{font-size:9px;color:#93a88f;margin:8px 0 0}
+.meeting-status .voice-status{font-size:10px;color:#99aaa0;margin:8px 0 0;min-height:0;padding:0;flex:1;min-width:220px}
+.meeting-status .voice-status.error{color:#ffd1a5}
+.meeting-status .recording-meter{margin:8px 0 0;color:#b8caaa;font-size:10px}
+.meeting-status .mic-help{width:100%;background:#423623;color:#ffdfb6;margin:8px 0 0}
+.meeting-status #cameraStatus{width:100%;font-size:11px;color:#f0cc9e;line-height:1.5;margin-top:8px}
+.meeting-status .text-link{font-size:10px;color:#d2e3ba;margin-top:8px}
+#roomView .pause-banner{background:#423b27;color:#f2dfae;border-radius:7px;padding:10px;margin-top:10px;font-size:12px}
+#roomView .meeting-toolbar{display:flex;justify-content:space-between;align-items:center;flex-shrink:0;border-top:1px solid #ffffff12;padding:14px 30px;background:#181e20;gap:12px;min-height:85px}
+.toolbar-controls{display:flex;align-items:center;gap:7px;min-width:0}
+.meeting-toolbar button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:8px 14px;border:1px solid transparent;border-radius:8px;background:transparent;color:#c8d3cd;font-size:10px;min-height:55px;min-width:65px;font-family:inherit;white-space:nowrap}
+.meeting-toolbar button svg{width:20px;height:20px}
+.meeting-toolbar button:hover{background:#ffffff0b;color:white}
+.meeting-toolbar button[aria-expanded="true"],.meeting-toolbar button[aria-pressed="true"]{background:#29382e;color:#d6eac0}
+.meeting-toolbar #micBtn{background:#c1e09b;color:#1b3528;min-width:92px}
+.meeting-toolbar #micBtn.listening{background:#d6ad83;color:#322313}
+.meeting-toolbar .leave-button{flex-direction:row;background:#a1433f;color:white;min-height:40px;gap:10px;padding:11px 20px;font-size:12px}
+.meeting-toolbar .leave-button:hover{background:#b64f49}
+.toolbar-divider{height:30px;width:1px;background:#ffffff17;margin:0 7px}
+.meeting-toolbar button:disabled{opacity:.4;cursor:not-allowed}
+.meeting-mode button:focus-visible,.meeting-mode select:focus-visible,.meeting-mode textarea:focus-visible{outline:2px solid #c1e09b;outline-offset:3px}
+.meeting-mode .error-banner{position:fixed;bottom:105px;left:30px;right:30px;max-width:650px;margin:auto;z-index:20;box-shadow:0 8px 30px #0004}
+.room-panel{width:390px;flex-shrink:0;background:#1b2325;border-left:1px solid #ffffff14;overflow:auto;min-height:0;color:#dae3dd}
+.panel-heading{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 8px}
+.panel-heading h2{font-size:16px;font-weight:500;color:#e5ebe6}
+.panel-heading .icon-button{background:transparent;color:#b8c6bc;border:0;width:30px;height:30px}
+.panel-tabs{display:flex;gap:4px;padding:0 17px 12px;border-bottom:1px solid #ffffff13}
+.panel-tabs button{background:transparent;color:#9aada1;border:0;border-radius:6px;font-size:11px;padding:8px 12px}
+.panel-tabs button[aria-pressed="true"]{background:#344137;color:#d8ebc6}
+.transcript-heading{display:flex;justify-content:space-between;padding:17px 20px 0;font-size:9px;color:#94a79b}
+.room-panel .transcript{height:235px;padding:18px 20px;background:transparent;min-height:0}
+.room-panel .message{margin-bottom:20px;gap:9px}
+.room-panel .message p{color:#c0cec4;font-size:11px;line-height:1.8}
+.room-panel .message-heading strong{color:#e2e9e2;font-size:11px}
+.room-panel .message-heading span,.room-panel .message-heading time{color:#91a397;font-size:8px}
+.room-panel .message .avatar{width:25px;height:25px;font-size:10px;flex-shrink:0}
+.room-panel .message.moderator{background:#ffffff05;border:1px solid #ffffff09;color:#bdcbbf;padding:12px}
+.room-panel .message-tag{background:#304335;color:#c4dcae;font-size:8px}
+.room-panel .composer{padding:20px;background:#202a2b;border-top:1px solid #ffffff12;border-radius:0}
+.room-panel .composer-top{font-size:11px;color:#d5e0d6}
+.room-panel #wordCounter{color:#93a99a;font-size:10px}
+.room-panel textarea,.room-panel select{background:#151d1f;color:#e4ebe5;border:1px solid #45534c;border-radius:7px;font-size:12px;line-height:1.6;padding:10px;box-sizing:border-box}
+.room-panel textarea{min-height:96px}
+.room-panel .composer-actions{gap:12px;margin-top:12px}
+.room-panel .composer-actions .primary{font-size:11px;background:#c1e09b;color:#1c3428;padding:12px;min-height:38px}
+.room-panel .text-link{color:#c2dcae;font-size:11px}
+.room-panel .privacy-note{font-size:9px;color:#92a69a;line-height:1.6;margin:13px 0 0}
+.room-panel .field-hint{font-size:11px;color:#99afa1;line-height:1.7}
+.room-panel .field-label,.room-panel .review-check{color:#d4dfd4;font-size:11px}
+.room-panel #devicesPanel,.room-panel #insightsPanel{padding:20px}
+.room-panel #devicesPanel h3{font-size:15px;font-weight:500;margin:0 0 8px}
+.room-panel .mic-device-row,.room-panel .camera-device-row{display:flex;flex-direction:column;align-items:flex-start;gap:9px;margin-top:22px}
+.room-panel .mic-device-row label,.room-panel .camera-device-row label{font-size:11px;color:#d9e3da}
+.room-panel .mic-device-row select,.room-panel .camera-device-row select{width:100%;max-width:none;font-size:11px;min-width:0}
+.room-panel .auto-share-row{border-top:1px solid #ffffff16;padding-top:22px;margin-top:25px;color:#d9e6d6;font-size:12px}
+.room-panel .auto-share-row small{font-size:11px;color:#9fb2a4;line-height:1.7}
+.room-panel .target-strip{background:#28362d;border:0;padding:15px;margin:0 0 18px;display:block;color:#c2d7b2;border-radius:8px}
+.room-panel .target-strip span{font-size:8px;color:#a4be91}
+.room-panel .target-strip p{font-size:12px;line-height:1.7;margin:8px 0 0;color:#d0e1c4}
+.room-panel .insights{display:grid;grid-template-columns:1fr;gap:14px}
+.room-panel .insight-card,.room-panel .coach-card{background:#242f2f;border:1px solid #ffffff0c;padding:20px}
+.room-panel .card-kicker{color:#a7bf98;font-size:9px}
+.room-panel .insight-card h2,.room-panel .coach-card h3{color:#dfebd8}
+.room-panel .insight-card>p,.room-panel .coach-card p{color:#a5b9a9;font-size:12px}
+.room-panel .stat-pair span{color:#dfebd8}.room-panel .stat-pair small{color:#a3b69c}
+.room-panel details{color:#b6cbb0;border-color:#ffffff15}.room-panel summary{color:#c1dbb0}
+.room-panel .baseline-badge{color:#b5ce9e;background:#354332}
+.room-panel .stance-orb{display:none}.room-panel .room-footnote{font-size:10px;color:#95ab9a}
+@media(min-width:1500px){.meeting-stage{padding:25px 55px 18px}.room-panel{width:420px}}
+@media(max-width:1100px){.meeting-header{padding:0 20px}.meeting-brand>span{display:none}.meeting-brand .room-divider{display:none}.meeting-stage{padding:18px 20px 12px}.stage-heading>span:last-child{display:none}.meeting-toolbar button{padding:8px 10px;min-width:55px}.room-panel{width:355px}#roomView .meeting-toolbar{padding:12px 20px}.tile-identity{gap:6px}#roomView .participant .avatar{width:58px;height:58px;font-size:24px}.tile-identity p{display:none}}
+@media(max-width:850px){.room-panel{position:absolute;right:0;top:0;bottom:0;z-index:10;width:360px;max-width:100%;box-shadow:-12px 0 35px #0005}.meeting-meta .practice-pill{display:none}.meeting-caption{max-height:120px}.toolbar-divider{display:none}.meeting-toolbar button{min-width:49px;padding:8px}.meeting-toolbar .leave-button{padding:11px 15px}.tile-identity p{display:block}}
+@media(max-width:600px){.meeting-mode #roomView{min-height:650px}.meeting-header{height:75px;padding:0 15px;gap:12px}.meeting-brand{gap:10px}.meeting-brand img{width:30px;height:30px}.meeting-eyebrow{font-size:7px;letter-spacing:1px}.meeting-header h1{font-size:13px;line-height:1.4}.meeting-meta .timer{font-size:12px;padding:9px}.meeting-meta .timer svg{display:none}.meeting-stage{padding:15px 12px 12px}.stage-heading{margin-bottom:12px;font-size:11px}.stage-heading small{font-size:10px}#roomView .participants{gap:9px;grid-template-rows:repeat(2,minmax(145px,1fr));min-height:300px}#roomView .participant .avatar{width:49px;height:49px;font-size:21px}.tile-identity h2{font-size:13px}.tile-identity p{display:none}.tile-identity{margin-bottom:10px}#roomView .tile-badge{font-size:7px;right:8px;top:8px;padding:4px 5px}.tile-bottom{padding:10px}#roomView .tile-bottom>div>strong{font-size:10px}#roomView .tile-bottom>div>span{font-size:7px}#roomView .wave{gap:2px}.meeting-caption{margin-top:12px;display:block;padding:10px 12px;max-height:110px}.meeting-caption>span{font-size:9px}.meeting-caption p{font-size:11px;margin-top:4px;line-height:1.6}.stage-note{font-size:8px;line-height:1.5}.stage-note span{flex:1}.stage-note span:last-child{text-align:right}.meeting-status .voice-status{font-size:9px}.meeting-status .speech-engine{display:none}#roomView .meeting-toolbar{padding:10px;gap:6px;flex-wrap:wrap}.toolbar-controls{flex:1;gap:1px;justify-content:space-between;flex-wrap:wrap}.meeting-toolbar button{font-size:8px;min-width:42px;padding:6px;gap:6px}.meeting-toolbar button svg{width:18px;height:18px}.meeting-toolbar #micBtn{min-width:58px;max-width:75px;white-space:normal;text-align:center}.meeting-toolbar #pauseBtn{min-width:30px}.meeting-toolbar .leave-button{min-width:38px;padding:10px;min-height:38px}.meeting-toolbar .leave-button span{display:none}.room-panel{width:100%}.meeting-mode .error-banner{left:12px;right:12px;font-size:11px}.meeting-status .recording-meter{width:100%}}
+#roomView .participant .avatar{display:grid;place-items:center}
+#roomView .meeting-toolbar{width:100%;max-width:none;margin:0}
+.room-panel{scrollbar-color:#53655b #1b2325;scrollbar-width:thin}
+.room-panel .transcript{scrollbar-color:#53655b #1b2325;scrollbar-width:thin}
+.room-panel .message.user .message-body{background:#2c3b32;border-color:#405443;color:#d6e5d2}
+.room-panel .panel-heading{position:sticky;top:0;z-index:2;background:#1b2325;height:62px}
+.room-panel .panel-tabs{position:sticky;top:62px;z-index:2;background:#1b2325}
+@media(max-width:600px){.toolbar-controls{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}.meeting-toolbar .toolbar-controls button,.meeting-toolbar #micBtn,.meeting-toolbar #pauseBtn{min-width:0;max-width:none;padding:6px 2px;white-space:normal;text-align:center}.meeting-toolbar button span{line-height:1.4}.meeting-toolbar .leave-button{flex-shrink:0}}
+@media(prefers-reduced-motion:reduce){#roomView .wave i{animation:none!important}}

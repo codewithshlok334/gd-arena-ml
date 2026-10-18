@@ -1,0 +1,131 @@
+MEETING ROOM UPDATE: Camera is optional and starts off. See MEETING_ROOM_START_HERE.txt for the new controls.
+
+GD ARENA - FULL VS CODE PROJECT
+==============================
+
+The trained stance model is included. NO retraining is needed to run the app.
+Everything you edit is in this folder: Python, frontend, topics, data and tests.
+
+1. OPEN THE PROJECT
+-------------------
+Extract GD_Arena_VS_Code.zip completely (do not run files inside the ZIP).
+In VS Code choose File > Open Folder and select GD_Arena_VS_Code.
+The correct folder contains app.py, launch.py, requirements.txt and web/.
+You can also double-click GD_Arena.code-workspace inside that folder.
+
+Install Python 3.12 if you do not already have it; enable Add Python to PATH
+in its installer. This project was tested using Python 3.12 on Windows.
+Install Microsoft's Python extension in VS Code. Python Debugger enables F5;
+the Jupyter extension is optional for reading/running the training notebooks.
+
+2. SIMPLE RUN
+--------------
+Open Terminal > New Terminal in VS Code. Run:
+
+    python launch.py
+
+The launcher installs missing libraries in .runtime/packages and downloads the
+pretrained voice model once (about 75 MB). Internet is needed on first setup.
+It opens http://127.0.0.1:7860/ in your browser. Keep the terminal running.
+On Windows you can also double-click START_GD_ARENA.cmd.
+
+3. RECOMMENDED SETUP FOR CODING / F5 / TESTS (WINDOWS POWERSHELL)
+--------------------------------------------------------------
+From the project folder, run these commands ONE AT A TIME:
+
+    python -m venv .venv
+    .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+    .\.venv\Scripts\python.exe setup_voice.py
+    .\.venv\Scripts\python.exe launch.py
+
+Use a Python 3.12 installation for the first command. If Python is not found,
+install Python 3.12, close VS Code, reopen it, and try again. With the Windows
+Python launcher installed, py -3.12 may replace python in the first command.
+No environment-activation script or PowerShell policy change is needed.
+
+Press Ctrl+Shift+P > Python: Select Interpreter, then choose
+.venv\Scripts\python.exe from this project. You can now use F5 and select
+"GD Arena: Run model + UI". Terminal > Run Task provides run/test tasks too.
+
+If the app is already running on port 7860, the launcher opens that instance.
+To debug THIS folder's Python changes, use "Debug server on port 7861" after
+the environment and speech setup above. That opens http://127.0.0.1:7861/.
+Stop the server with Ctrl+C (or stop the debugger) before restarting it.
+After frontend edits, refresh the browser. Refresh clears the current session.
+
+Mac/Linux equivalent environment setup:
+    python3 -m venv .venv
+    .venv/bin/python -m pip install -r requirements.txt
+    .venv/bin/python setup_voice.py
+    .venv/bin/python launch.py
+
+4. USE THE DEMO
+---------------
+Choose one of the 10 topics, select English (India), and enter the room.
+Choose your laptop/headset microphone; on the original laptop this was
+Microphone Array (Realtek High Definition Audio), not the inactive Camo input.
+Allow microphone access, press Speak, and give your point.
+A 2-second quiet pause ends the recording; after transcription, English points
+share automatically. Turn off Auto share after a pause to review text first.
+The mic starts only when you press Speak. Stop & transcribe remains available.
+Hindi/Hinglish needs a manually reviewed English version before submission.
+Use Chrome/Edge for microphone access, or Upload audio / type your point.
+
+5. WHAT EACH FILE DOES
+----------------------
+app.py                         Python web server, model API, discussion replies
+gd_model.py                    Data preparation, training, evaluation, prediction
+speech.py                      Pretrained Whisper audio transcription
+setup_voice.py                 Pinned speech-model download
+launch.py                      Setup and run the saved model + UI
+requirements.txt               Python library versions
+topics.json                    10 discussion topics
+web/index.html                 Frontend layout
+web/styles.css                 Frontend design
+web/app.js                     Discussion, review, automatic submission, playback
+web/voice.js                   Mic recording, level meter, 2-second pause detection
+artifacts/stance_model.joblib   Already-trained stance model and text features
+artifacts/metrics.json         Actual validation/test results
+artifacts/*.png                Model comparison and confusion matrices
+data/gd_examples.csv           300 authored GD examples and train/dev/test splits
+tests/                         Python tests and optional Node voice tests
+.vscode/                       Editor configuration, run/debug profiles, tasks
+notebooks/                     Training + ready-demo Colab notebooks in this ZIP
+START_HERE.txt                 Full demo and troubleshooting guide
+DEMO_TALK_TRACK.txt            Explanation for presenting your project
+DATA_SOURCES.txt               Dataset origins and pretrained voice model details
+CHECKSUMS.json                 Packaged file integrity hashes
+
+The public VAST training data is downloaded by gd_model.py when training;
+raw third-party data is not redistributed in this ZIP. The 300 authored
+examples are included. Speech weights download separately during setup.
+Python packages, virtual environments and machine-specific caches are excluded.
+
+6. OPTIONAL: REPEAT TRAINING WITHOUT REPLACING THE READY MODEL
+------------------------------------------------------------
+After the virtual-environment setup above:
+
+    .\.venv\Scripts\python.exe gd_model.py train --output-dir artifacts_retrained
+
+This downloads and verifies the pinned public data, trains the classifiers,
+and writes a NEW model plus results under artifacts_retrained. The app keeps
+using the supplied artifacts/stance_model.joblib. Training is optional.
+For Colab, open notebooks/GD_Arena_Colab.ipynb and follow its cells.
+notebooks/GD_Arena_Run_Demo_Colab.ipynb runs the saved app without training.
+
+7. OPTIONAL CHECKS
+------------------
+    .\.venv\Scripts\python.exe -m unittest discover -s tests -v
+
+If Node.js is installed:
+    node tests/test_voice.cjs
+
+8. WHAT TO EXPLAIN TO YOUR TEACHER
+---------------------------------
+The trained ML component predicts support, oppose or neutral using TF-IDF
+features and Logistic Regression. Public test accuracy: 43.31%; authored GD
+test accuracy: 63.33%. It is an experimental baseline and can make mistakes.
+The 300 GD examples are synthetic, assistant-authored educational examples.
+The discussion partners use prepared perspectives selected by relevance.
+Whisper tiny is a separately pretrained speech model, not trained by this
+project. Voice playback and pause detection are interface features.

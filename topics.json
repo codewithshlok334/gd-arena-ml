@@ -1,0 +1,112 @@
+[
+  {
+    "id": "ai_jobs",
+    "title": "AI: Job Creator or Job Destroyer?",
+    "target": "Artificial intelligence will create more jobs than it destroys.",
+    "intro": "Consider automation, new occupations, reskilling and who benefits.",
+    "label_meaning": {
+      "support": "Supports the target proposition.",
+      "oppose": "Opposes the target proposition.",
+      "neutral": "Does not express a clear stance towards the target."
+    }
+  },
+  {
+    "id": "remote_work",
+    "title": "Work From Home vs Work From Office",
+    "target": "Working from home is better than working from an office.",
+    "intro": "Compare productivity, collaboration, inclusion and work-life boundaries.",
+    "label_meaning": {
+      "support": "Supports the target proposition.",
+      "oppose": "Opposes the target proposition.",
+      "neutral": "Does not express a clear stance towards the target."
+    }
+  },
+  {
+    "id": "online_education",
+    "title": "Online Education vs Classroom Learning",
+    "target": "Online education is better than classroom learning.",
+    "intro": "Discuss access, practical learning, engagement and assessment.",
+    "label_meaning": {
+      "support": "Supports the target proposition.",
+      "oppose": "Opposes the target proposition.",
+      "neutral": "Does not express a clear stance towards the target."
+    }
+  },
+  {
+    "id": "social_media",
+    "title": "Social Media: Connecting Us or Isolating Us?",
+    "target": "Social media strengthens meaningful human connections.",
+    "intro": "Consider community, attention, relationships and loneliness.",
+    "label_meaning": {
+      "support": "Supports the target proposition.",
+      "oppose": "Opposes the target proposition.",
+      "neutral": "Does not express a clear stance towards the target."
+    }
+  },
+  {
+    "id": "skills_degrees",
+    "title": "Skills vs Degrees: What Matters More?",
+    "target": "Employers should prioritize practical skills over academic degrees.",
+    "intro": "Discuss evidence of ability, credentials, fairness and training.",
+    "label_meaning": {
+      "support": "Supports the target proposition.",
+      "oppose": "Opposes the target proposition.",
+      "neutral": "Does not express a clear stance towards the target."
+    }
+  },
+  {
+    "id": "ai_education",
+    "title": "Should AI Tools Be Allowed in Education?",
+    "target": "Students should be allowed to use AI tools in education.",
+    "intro": "Consider tutoring, original thinking, assessment and disclosure.",
+    "label_meaning": {
+      "support": "Supports the target proposition.",
+      "oppose": "Opposes the target proposition.",
+      "neutral": "Does not express a clear stance towards the target."
+    }
+  },
+  {
+    "id": "digital_payments",
+    "title": "Digital Payments vs Cash",
+    "target": "Digital payments are better than cash for everyday transactions.",
+    "intro": "Discuss convenience, accessibility, privacy and reliability.",
+    "label_meaning": {
+      "support": "Supports the target proposition.",
+      "oppose": "Opposes the target proposition.",
+      "neutral": "Does not express a clear stance towards the target."
+    }
+  },
+  {
+    "id": "startups",
+    "title": "Startups vs Corporate Jobs",
+    "target": "Joining a startup is a better career choice than joining a large corporation.",
+    "intro": "Consider learning, stability, responsibility and career goals.",
+    "label_meaning": {
+      "support": "Supports the target proposition.",
+      "oppose": "Opposes the target proposition.",
+      "neutral": "Does not express a clear stance towards the target."
+    }
+  },
+  {
+    "id": "ev_india",
+    "title": "Electric Vehicles: Is India Ready?",
+    "target": "India is ready for widespread adoption of electric vehicles.",
+    "intro": "Discuss charging, affordability, electricity supply and infrastructure.",
+    "label_meaning": {
+      "support": "Supports the target proposition.",
+      "oppose": "Opposes the target proposition.",
+      "neutral": "Does not express a clear stance towards the target."
+    }
+  },
+  {
+    "id": "environment",
+    "title": "Economic Growth vs Environmental Protection",
+    "target": "Environmental protection should take priority over short-term economic growth.",
+    "intro": "Consider jobs, health, natural resources and long-term costs.",
+    "label_meaning": {
+      "support": "Supports the target proposition.",
+      "oppose": "Opposes the target proposition.",
+      "neutral": "Does not express a clear stance towards the target."
+    }
+  }
+]

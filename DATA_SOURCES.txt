@@ -1,0 +1,70 @@
+DATA PROVENANCE
+===============
+
+1. VAST: VAried Stance Topics
+Authors: Emily Allaway and Kathleen McKeown (2020).
+Paper: Zero-Shot Stance Detection: A Dataset and Model using Generalized Topic
+Representations. Proceedings of EMNLP 2020, pages 8913-8931.
+https://aclanthology.org/2020.emnlp-main.717/
+Original author repository:
+https://github.com/emilyallaway/zero-shot-stance
+Pinned revision: e7c4775182b184730f350995f8260579c9e066fe
+Original split files: data/VAST/vast_train.csv, vast_dev.csv, vast_test.csv.
+
+Map original label 0 to oppose, 1 to support, 2 to neutral.
+Use the original post as argument text and the JSON topic token list as target.
+Important: new_topic can retain a stale target in neutral examples; it must
+not be used as the stance target. This matches the authors' target selection:
+https://github.com/emilyallaway/zero-shot-stance/blob/master/src/modeling/datasets.py
+The upstream
+processed text is not used because its cleaning removes useful words such as
+negations. Official splits are retained, then exact normalized text leakage,
+duplicate text-target pairs and conflicting pair labels are audited/removed.
+The metrics therefore describe our cleaned splits, not an exact reproduction
+of the paper's benchmark. Topics with different spellings may still overlap
+semantically even when exact strings do not.
+
+The checked author repository did not provide an explicit standalone dataset
+license. Public availability is not a blanket redistribution license. Raw
+VAST comments are not bundled in the deliverable. The notebook downloads the
+authors' release directly for this educational experiment. Consult the
+authors/source terms before wider redistribution or commercial reuse. This
+package does not assign a new license to third-party data or derived weights.
+
+2. GD Arena example set
+File: data/gd_examples.csv
+300 English rows: 10 topics x 3 labels x 10 examples.
+Provenance: original assistant-authored synthetic educational examples.
+Labels: assistant-assigned, not independently verified.
+Split: 180 training, 60 validation, 60 test examples, fixed before training.
+The numbered topic-family group is kept in one split; no automatic paraphrase
+or duplicated-template expansion is used to inflate the dataset size.
+This is a starter domain-adaptation set. Some arguments are closely related;
+its test scores must not be presented as independent human benchmark results.
+
+The content is hypothetical debate material, not verified factual evidence.
+Topic IDs are not predictive features; the full target text is used instead.
+The source column and split labels are not passed to the classifier.
+
+ANNOTATING YOUR OWN DATA
+Write a clear target proposition first. Label a response support if it favors
+that proposition, oppose if it rejects it, and neutral if it expresses no
+clear stance. Mixed or ambiguous statements need a written annotation policy.
+Ask two people to label without seeing model predictions; adjudicate conflicts.
+Keep paraphrases, the same speaker/session and repeated source text in the
+same split. Reserve a fresh real-user test set before tuning your model.
+
+References for implementation:
+https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction
+https://scikit-learn.org/stable/common_pitfalls.html#data-leakage
+https://research.google.com/colaboratory/faq.html
+
+
+PRETRAINED SPEECH COMPONENT
+--------------------------
+Input transcription: faster-whisper 1.2.1, https://github.com/SYSTRAN/faster-whisper
+Pretrained multilingual tiny model: https://huggingface.co/Systran/faster-whisper-tiny
+Pinned revision: d90ca5fe260221311c53c58e660288d3deb8d356
+Model card license: MIT. The converted weights are downloaded into .runtime,
+not included in the ZIP or notebook payload. This speech model was pretrained
+by its original authors; only the stance classifier was trained for GD Arena.

@@ -1,0 +1,38 @@
+MEETING ROOM UPDATE: Camera is optional and starts off. See MEETING_ROOM_START_HERE.txt for the new controls.
+
+GD ARENA — WHAT TO SAY DURING YOUR PRESENTATION
+
+My project is a Python-based group discussion practice application. It has ten
+topics, a text and voice interface, and a trained stance-classification model.
+
+The machine-learning task is: given an English argument and a target
+proposition, predict whether it supports, opposes or is neutral toward that
+proposition. I use TF-IDF features, Logistic Regression, and a Linear SVM
+comparison. I selected the saved model on validation data, then evaluated
+separately on held-out public and authored GD examples.
+
+In the demo I select a topic and speak. After a 2-second pause, English speech
+is transcribed and automatically submitted. I can turn auto share off to review
+first, or type a point. Pause detection is browser audio logic, not trained ML.
+The Python server loads the saved model and returns its prediction. Three
+practice partners rotate through prepared perspectives selected by relevance.
+The browser can read their replies aloud. I can pause, end the session, and
+download a transcript and recap.
+
+Hindi/Hinglish speech is transcribed by a pretrained Whisper model on the Python server. I review its English
+meaning before sending it to the English-only classifier. I have not trained
+a speech-recognition or translation model.
+
+The public test accuracy is 43.31%; the authored GD test accuracy is 63.33%.
+These results make this a baseline learning project, not a dependable
+interview scoring system. Some predictions will be wrong. Future work is
+more human-labelled GD data, better neutral detection, multilingual modelling,
+and evaluating a genuinely generative discussion partner separately.
+
+If asked about data: show DATA_SOURCES.txt, the training notebook and the
+train/dev/test split columns. The 300 GD examples are assistant-authored
+synthetic examples, not real candidate interview recordings.
+
+If asked what YOU understand: explain the feature-to-classifier pipeline,
+the reason for held-out testing, macro F1, and the difference between stance
+and quality. Customize and study the code before presenting it as your work.

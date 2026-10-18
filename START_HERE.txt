@@ -1,0 +1,175 @@
+MEETING ROOM UPDATE: Camera is optional and starts off. See MEETING_ROOM_START_HERE.txt for the new controls.
+
+GD ARENA — COMPLETE WORKING DEMO
+================================
+
+The trained model is included. You do NOT need to train it again.
+
+ON YOUR CURRENT LAPTOP
+----------------------
+Double-click OPEN_GD_ARENA.cmd in the outer outputs folder.
+It uses the Python libraries already prepared on this laptop.
+The page opens at http://127.0.0.1:7860/ . Keep the app window running.
+This outer launcher is specific to the original laptop and folder layout.
+
+ON ANOTHER WINDOWS LAPTOP
+-------------------------
+1. Extract GD_Arena_Complete_Project.zip completely.
+2. Open the gd_arena_model folder.
+3. Double-click START_GD_ARENA.cmd.
+4. On first use, let the launcher install the exact Python packages.
+   Internet and Python are needed for this setup. A pinned 75 MB pretrained
+   speech model is downloaded once. No training is performed.
+5. If Python is missing, install Python 3.12 from https://www.python.org/
+   with Add Python to PATH enabled. Run the launcher again.
+6. Keep the terminal window open during the demo. Ctrl+C stops the server.
+
+The app was tested on Windows, Python 3.12 and Microsoft Edge.
+On macOS/Linux with Python installed: python3 launch.py
+For a manual setup: python -m pip install -r requirements.txt
+Then: python app.py --open-browser
+For a first manual setup, run python setup_voice.py before starting app.py.
+Do not open web/index.html directly: the Python model server must be running.
+
+GOOGLE COLAB — OPEN THE DEMO, NO TRAINING
+----------------------------------------
+Upload GD_Arena_Run_Demo_Colab.ipynb to https://colab.research.google.com/
+Choose a normal CPU runtime and select Runtime > Run all.
+The notebook contains the saved stance model, code, ten topics and frontend.
+It downloads the pretrained speech model once during setup.
+It installs packages, starts the app, and shows it inside the notebook.
+No separate ZIP upload, API key or GPU is required.
+Keep Colab connected; closing its runtime stops the app.
+Colab's embedded browser can restrict mic/voice features. Use the local
+Chrome/Edge version for your voice demonstration if that happens.
+The notebook payload and server were checked locally. The Colab-specific
+iframe was not run in your Google account.
+
+TWO-MINUTE CLASSROOM DEMO
+------------------------
+1. Select a topic, a 5-minute session, and English (India).
+2. Click Enter practice room.
+3. Choose your microphone, press Speak, and state your view.
+4. Stop speaking for 2 seconds. English speech is transcribed and shared
+   automatically. Switch off Auto share after a pause to review first.
+5. Show the model's support / oppose / neutral prediction and a partner reply.
+6. Contribute two more times to hear all three prepared partner perspectives.
+7. Click End session > Finish & see recap. Download the transcript.
+8. Use About this model and artifacts/metrics.json to explain the ML results.
+
+HINDI / HINGLISH VOICE
+----------------------
+Select Hindi / Hinglish before starting. Press Speak, allow the microphone,
+speak, then pause for 2 seconds. A pretrained multilingual Whisper model
+transcribes the recording. Review the original transcript and manually write
+its English meaning in the second field. Tick the review box and share.
+Recognition accuracy varies with language, accent and noise. Whisper tiny is
+a small baseline speech model, and Hindi/Hinglish may need substantial edits.
+The trained stance classifier and spoken partner replies are English-only.
+Automatic translation is NOT included.
+
+VOICE TROUBLESHOOTING
+----------------------
+- Input no longer uses the browser's online SpeechRecognition service.
+- Recordings are transcribed by a pretrained Whisper model on the Python server.
+- On this laptop, audio stays on this laptop. On Colab, it goes to your Colab
+  runtime. Audio is processed in memory and is not saved by this app.
+- The first setup downloads a speech model; local transcription then works
+  without an external speech API, API key, or speech-provider connection.
+- Press Speak, choose Allow for microphone access, speak for a few seconds,
+  then pause for 2 seconds. The input-level meter shows microphone activity.
+- Auto share is on by default for English microphone turns. It waits until
+  speech has been detected before using silence to end a recording. Initial
+  silence and brief noises do not complete a turn. Background noise can affect
+  pause detection; Stop & transcribe is still available for manual review.
+- Short pauses under 2 seconds continue the same recording. Transcription
+  takes a few more seconds after recording ends. The mic does not reopen itself.
+- Uploaded audio, an existing typed draft, Hindi/Hinglish, manual stops, and
+  very short transcripts stay available for review instead of auto-sharing.
+- Turn off Auto share after a pause if you prefer checking every transcript.
+- Automatic pause/share has 18 simulated checks; live automatic timing has
+  not yet been confirmed by the user. The earlier Realtek mic test is separate.
+- Use the Microphone selector to choose the actual laptop/headset mic. On the
+  original laptop, Default - Microphone (Camo) produced silence; choosing
+  Microphone Array (Realtek High Definition Audio) resolved it, as confirmed
+  by the user. The selected device is saved in this browser's local storage.
+- If permission is blocked in the in-app browser, open the local address in
+  Chrome or Edge and allow the microphone for that page. Windows microphone
+  access must also permit desktop apps. The code cannot bypass permissions.
+- If recording remains blocked, use Upload audio with a WAV, MP3, WebM, M4A
+  or Ogg voice clip under 90 seconds and 8 MB, or continue by typing.
+- Cancel recording, Pause, End session and leaving the page release the mic
+  and prevent late transcription from changing another session.
+- Browser text-to-speech still reads partner replies. Available voices vary
+  by device; some device voices may depend on network services.
+- Tested with actual synthetic spoken audio in WAV and WebM, plus the live
+  UI upload/transcription flow. The user also confirmed physical microphone
+  transcription works after switching to Realtek. Automated tests do not record
+  the user's microphone.
+
+WHAT IS ML, AND WHAT IS UI LOGIC?
+--------------------------------
+TRAINED ML: TF-IDF word/character/topic-interaction features and a saved
+Logistic Regression stance classifier. A Linear SVM and majority baseline
+were also evaluated; model selection used validation macro F1.
+
+PRACTICE PARTNERS: prepared, assistant-authored training examples are ranked
+by TF-IDF similarity within a topic and a rotating support/oppose/neutral role.
+Replies are not newly generated debate arguments. After the available points
+are exhausted, the partner asks you to summarize the discussion.
+
+VOICE: pretrained multilingual Whisper tiny via faster-whisper for input;
+browser text-to-speech for output. This speech model was NOT trained in this
+project. It is separate from the stance classifier that was trained here.
+
+RECAP: word counts, turns, active time, predicted stance counts and transcript.
+Writing nudges are simple rules. There is no employability, fluency, personality
+or argument-quality score. Raw model scores are not confidence percentages.
+
+ACTUAL RESULTS AND LIMITATIONS
+------------------------------
+Training: 11,304 cleaned VAST examples + 180 authored GD training examples.
+Public VAST test: 2,907 examples; accuracy 43.31%, macro F1 0.3868.
+Authored GD test: 60 examples; accuracy 63.33%, macro F1 0.6376.
+These are separate datasets and should not be presented as one accuracy.
+This is an experimental baseline. It can misclassify even clear arguments;
+neutral detection is especially weak. It is not a reliable interview assessor.
+Improve it with more diverse, human-reviewed topic data and stronger models.
+See RESULTS.txt, DATA_SOURCES.txt and artifacts/ for full evaluation details.
+
+FILES TO EXPLAIN TO YOUR TEACHER
+--------------------------------
+gd_model.py                   Python feature engineering, training, prediction
+app.py                        Python local server and prepared reply selection
+web/                          HTML, CSS, JavaScript interface and voice controls
+speech.py, setup_voice.py      Local transcription and pinned speech-model setup
+data/gd_examples.csv          300 authored examples, explicit train/dev/test splits
+topics.json                   Ten topics and exact target propositions
+artifacts/stance_model.joblib The already-trained model (load trusted models only)
+artifacts/metrics.json        Full held-out metrics and dataset cleaning audit
+artifacts/*.png               Confusion matrices and model comparison
+tests/                       Model and application integration tests
+GD_Arena_Colab.ipynb           Original training notebook, if retraining is requested
+GD_Arena_Run_Demo_Colab.ipynb  Opens the ready demo without retraining
+
+RUNNING TESTS
+-------------
+After installing requirements: python -m unittest discover -s tests -v
+Optional voice UI tests with Node installed: node tests/test_voice.cjs
+The public raw data is not included. The original training notebook downloads
+the pinned VAST revision directly from the authors and checks its hashes.
+
+SESSION PRIVACY
+---------------
+The app stores the current discussion in browser memory only. Refreshing the
+page clears it. Export a transcript if you want to keep it. The Python server
+does not save argument text or microphone recordings. In Colab, your audio is
+processed on your Colab runtime. This local classroom prototype is not a public hosting service.
+
+TECHNICAL REFERENCES
+--------------------
+Recording: https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
+Speech engine: https://github.com/SYSTRAN/faster-whisper
+Speech weights: https://huggingface.co/Systran/faster-whisper-tiny
+Browser playback: https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis
+Colab iframe: https://github.com/googlecolab/colabtools/blob/main/google/colab/output/_util.py

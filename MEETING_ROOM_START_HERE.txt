@@ -1,0 +1,49 @@
+GD ARENA - MEETING ROOM UPDATE
+==============================
+
+The trained model is included. No training is needed for this UI update.
+
+1. Choose a topic and enter the practice room. Camera is OFF by default.
+2. Speak starts the selected microphone. Stop speaking for 2 seconds to finish.
+   English points share automatically when Auto share is on.
+3. Start camera is optional. Allow Camera when prompted to see your local
+   preview. Stop camera returns to your avatar. A blocked or missing camera
+   does not prevent discussion. Video is never uploaded or saved.
+4. Devices contains microphone/camera selection and the Auto share checkbox.
+5. Discussion opens the transcript, typing box and audio upload.
+   Manual recordings, uploads, short speech, existing drafts and Hindi/Hinglish
+   open this panel for review. Hindi/Hinglish still needs an English version.
+6. Feedback shows the trained stance model result and participation totals.
+7. Voice on/off controls spoken partner replies. Pause pauses the session.
+   Pause, leaving the page, switching tabs and ending the session stop camera
+   capture. Turn it on again yourself after returning/resuming.
+8. Leave > Finish & see recap opens your summary and transcript download.
+
+The three practice partners offer prepared topic perspectives; they are not
+real people on a video call. The meeting layout is for interview GD practice.
+
+RUN IN VS CODE
+--------------
+Open this project folder. In its terminal run: python launch.py
+If an older version is already running, stop it with Ctrl+C first, run the
+launcher again, then press Ctrl+Shift+R in Chrome/Edge to refresh the UI.
+Keep your existing .runtime folder when updating to reuse installed models.
+
+COLAB
+-----
+Use the updated GD_Arena_Run_Demo_Colab.ipynb. Camera remains optional if the
+Colab embedded browser does not grant camera access. Audio may be uploaded.
+
+VALIDATION
+----------
+22 Python model/API/audio checks, 18 voice checks, 8 microphone error checks
+and 14 camera lifecycle checks passed. Real model responses and the meeting
+controls were checked in the browser. Camera checks use simulated streams;
+the physical webcam has not been activated as part of these tests.
+
+LOADING FIX
+-----------
+Camera and meeting CSS are now included in the original app.js and styles.css
+URLs, so an older running server can serve the updated room. Reload the page
+with Ctrl+Shift+R after replacing the web files. No retraining is needed.
+If you edit web/camera.js or web/meeting.css, run python build_web_assets.py.

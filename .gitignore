@@ -1,0 +1,16 @@
+.venv/
+.runtime/
+__pycache__/
+*.py[cod]
+*.log
+data/vast/
+.ipynb_checkpoints/
+artifacts_retrained/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+node_modules/
+.DS_Store
+Thumbs.db

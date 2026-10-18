@@ -1,0 +1,61 @@
+GD ARENA — MEASURED MODEL RESULTS
+=================================
+
+Selected model: Logistic Regression
+Training rows: 11,484 (11,304 public VAST + 180 assistant-authored GD)
+Feature dimensions: 96,000
+Random seed: 42
+
+VALIDATION-ONLY MODEL SELECTION
+  Majority baseline: VAST macro F1=0.1640; authored GD macro F1=0.1667; mean=0.1654
+  Logistic Regression: VAST macro F1=0.3378; authored GD macro F1=0.4811; mean=0.4094
+  Linear SVM: VAST macro F1=0.3431; authored GD macro F1=0.4007; mean=0.3719
+
+HELD-OUT RESULTS
+  Public VAST test: n=2,907; accuracy=43.31%; macro F1=0.3868
+    oppose: precision=0.4546; recall=0.5566; F1=0.5005
+    support: precision=0.3987; recall=0.6932; F1=0.5062
+    neutral: precision=0.6338; recall=0.0875; F1=0.1537
+  Assistant-authored GD test: n=60; accuracy=63.33%; macro F1=0.6376
+    oppose: precision=0.5556; recall=0.5000; F1=0.5263
+    support: precision=0.5385; recall=0.7000; F1=0.6087
+    neutral: precision=0.8750; recall=0.7000; F1=0.7778
+  VAST exact unseen target strings: n=1,444; accuracy=40.58%; macro F1=0.3604
+    oppose: precision=0.4333; recall=0.5445; F1=0.4826
+    support: precision=0.3700; recall=0.6545; F1=0.4727
+    neutral: precision=0.5781; recall=0.0706; F1=0.1259
+
+HOW TO INTERPRET THESE RESULTS
+This is a first educational baseline, not a validated real-world GD evaluator.
+The public-data result is modest. In particular, inspect neutral-class recall.
+The 60 authored test examples were labelled by the same assistant that wrote
+the starter dataset. Their score is not an independent real-user benchmark.
+Use this project to demonstrate training, comparison, error analysis and saved
+model inference. Improve data coverage before using its predictions in a live GD.
+
+VERIFICATION
+  9 model/data checks passed.
+  All 12 notebook code cells executed in a fresh local Python kernel.
+  Model selection and test confusion matrices reproduced exactly.
+  Google Colab cloud execution was not performed in the user account.
+  The data-download step used already downloaded, checksum-verified original files.
+
+RUNTIME VERSIONS
+{
+  "python": "3.12.14",
+  "numpy": "2.5.4",
+  "scipy": "1.16.3",
+  "scikit-learn": "1.7.2",
+  "joblib": "1.6.0"
+}
+
+LIMITATIONS
+  - Experimental educational baseline; predictions may be wrong, including on simple arguments.
+  - GD examples and labels were authored by the assistant, not collected from real users or independently annotated.
+  - Authored GD test scores are a small development check, not evidence of real-world interview performance.
+  - English only. Hindi/Hinglish, voice recognition, translation and conversational turn generation are not trained here.
+  - Neutral means no clear stance towards the target; it does not mean low confidence.
+  - Raw decision scores are uncalibrated model scores, not probabilities or argument-quality scores.
+  - Bag-of-words features cannot reliably understand sarcasm, implication, long context or arbitrary reversed propositions.
+  - Unseen-target reporting uses exact normalized target strings, not semantic topic equivalence.
+  - VAST cleaning modifies the published evaluation set; metrics are not directly comparable with paper results.
