@@ -1,6 +1,7 @@
 """Local, pretrained Whisper speech recognition. Audio is never written to disk."""
 from io import BytesIO
 from pathlib import Path
+import os
 import threading
 import numpy as np
 
@@ -30,10 +31,11 @@ class SpeechService:
     def _load(self):
         try:
             from faster_whisper import WhisperModel
+            threads = max(1, min(4, int(os.environ.get('GD_SPEECH_THREADS', '4'))))
             self.model = WhisperModel(str(MODEL_DIR), device='cpu', compute_type='int8',
-                                      cpu_threads=4, num_workers=1, local_files_only=True)
+                                      cpu_threads=threads, num_workers=1, local_files_only=True)
             self.state = 'ready'
-            self.message = 'Local voice ready. Press Speak, then Stop & transcribe.'
+            self.message = 'Voice ready. Press Speak to start.'
         except Exception:
             self.state = 'unavailable'
             self.message = 'Local voice could not load. Run the launcher to install speech libraries, then restart the app.'

@@ -95,6 +95,9 @@ function shareFixture() {
 
   let s = shareFixture(); s.share('Remote work saves commuting time.', 'en-IN', {autoShare: true});
   assert.equal(s.log.submitted, 1); checks++;
+  f = fixture(); await f.voice.start('en-IN', '', {autoShare:true});
+  f.audio(0.003,1000); f.audio(0,2020); await tick(); await tick();
+  assert.equal(f.log.texts.length,1);assert.equal(f.log.ready[0].completion.reason,'silence');checks++;
   for (const [text, language, completion, changes] of [
     ['Remote work saves time.', 'en-IN', {autoShare: false}, {}],
     ['Remote work saves time.', 'en-IN', {}, {}],

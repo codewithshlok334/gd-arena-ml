@@ -62,9 +62,22 @@ class ArenaIntegrationTests(unittest.TestCase):
         for payload in [[], self.payload(text='yes'), self.payload(text='x'*5001),
                         self.payload(topic_id='missing'), self.payload(text='यह मेरा विचार है'),
                         self.payload(turn_number=-1), self.payload(turn_number=True),
-                        self.payload(used_points='not-a-list')]:
+                        self.payload(used_points='not-a-list'), self.payload(reply_count=2),
+                        self.payload(reply_count=True)]:
             with self.subTest(payload=str(payload)[:100]), self.assertRaises(ValueError):
                 self.service.turn(payload)
+
+    def test_three_partner_round_and_no_repeated_points(self):
+        first = self.service.turn(self.payload(reply_count=3))
+        self.assertEqual([r['id'] for r in first['replies']], ['aanya', 'kabir', 'riya'])
+        self.assertEqual(first['reply'], first['replies'][0])
+        used = [r['point_id'] for r in first['replies']]
+        second = self.service.turn(self.payload(reply_count=3, used_points=used, turn_number=1))
+        self.assertFalse(set(used) & {r['point_id'] for r in second['replies']})
+        for reply in second['replies']:
+            point = next(p for p in self.service.points if p['id'] == reply['point_id'])
+            self.assertEqual(point['split'], 'train')
+            self.assertEqual(point['topic_id'], 'remote_work')
 
     def test_http_end_to_end(self):
         request = urllib.request.Request(self.url+'/api/turn', data=json.dumps(self.payload()).encode(),

@@ -59,12 +59,26 @@ class ArenaService:
             raise ValueError('Please write the English meaning of your transcript before model analysis.')
         used = payload.get('used_points', [])
         turn_number = payload.get('turn_number', 0)
+        reply_count = payload.get('reply_count', 1)
         if not isinstance(used, list) or len(used) > 100 or not all(isinstance(x, str) for x in used):
             raise ValueError('Invalid discussion history. Start a fresh session.')
         if type(turn_number) is not int or not 0 <= turn_number <= 1000:
             raise ValueError('Invalid turn number.')
+        if type(reply_count) is not int or reply_count not in {1, 3}:
+            raise ValueError('Choose one partner or a three-partner round.')
         analysis = predict(self.bundle, text.strip(), topic_id=topic_id)
-        partner = PARTNERS[turn_number % len(PARTNERS)]
+        partners = PARTNERS if reply_count == 3 else [PARTNERS[turn_number % len(PARTNERS)]]
+        replies = [self.reply_for(partner, topic_id, text, used) for partner in partners]
+        count = len(text.split())
+        has_example = bool(re.search(r'\b(for example|for instance|such as|because|consider)\b', text, re.I))
+        tip = ('Try adding one concrete example to support your point.' if not has_example else
+               'Next, acknowledge a trade-off or respond to another perspective.')
+        if count < 15:
+            tip = 'Build on your opening with a reason and one concrete example.'
+        return {'analysis': analysis, 'reply': replies[0], 'replies': replies, 'word_count': count,
+                'coach_note': tip, 'coach_note_type': 'Simple writing prompt, not an ML quality score.'}
+
+    def reply_for(self, partner, topic_id, text, used):
         candidates = [i for i, row in enumerate(self.points)
                       if row['topic_id'] == topic_id and row['label'] == partner['stance'] and row['id'] not in used]
         if candidates:
@@ -80,14 +94,7 @@ class ArenaService:
         else:
             reply = {**partner, 'point_id': None, 'prepared': True,
                      'text': 'We have explored several perspectives. Can you summarize the strongest point on each side and explain your conclusion?'}
-        count = len(text.split())
-        has_example = bool(re.search(r'\b(for example|for instance|such as|because|consider)\b', text, re.I))
-        tip = ('Try adding one concrete example to support your point.' if not has_example else
-               'Next, acknowledge a trade-off or respond to another perspective.')
-        if count < 15:
-            tip = 'Build on your opening with a reason and one concrete example.'
-        return {'analysis': analysis, 'reply': reply, 'word_count': count,
-                'coach_note': tip, 'coach_note_type': 'Simple writing prompt, not an ML quality score.'}
+        return reply
 
 
 def make_handler(service):

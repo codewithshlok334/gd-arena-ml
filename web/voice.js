@@ -3,7 +3,7 @@
 // Require sustained input before treating a quiet gap as the end of a turn.
 class SpeechEndDetector {
   constructor() {
-    this.noiseFloor = 0.002;
+    this.noiseFloor = 0.0003;
     this.speechMs = 0;
     this.heardSpeech = false;
     this.lastVoiceAt = null;
@@ -13,7 +13,7 @@ class SpeechEndDetector {
   update(rms, now) {
     const elapsed = this.previousAt === null ? 0 : Math.min(100, Math.max(0, now - this.previousAt));
     this.previousAt = now;
-    const threshold = Math.max(0.008, this.noiseFloor * 3);
+    const threshold = Math.max(0.0015, this.noiseFloor * 3);
     if (rms >= threshold) {
       if (!this.heardSpeech && this.lastVoiceAt !== null && now - this.lastVoiceAt > 300) this.speechMs = 0;
       this.speechMs += elapsed;
@@ -69,8 +69,10 @@ class LocalVoice {
     this.stopReason = reason;
     this.setPhase('transcribing');
     this.hooks.onStatus('Transcribing your recording on the Python server…');
+    clearInterval(this.clock);
+    clearTimeout(this.limit);
     this.recorder.stop();
-    this.cleanupCapture();
+    // Release tracks in onstop, after the browser flushes its final audio chunk.
   }
 
   async start(language, deviceId = '', options = {}) {
@@ -88,7 +90,32 @@ class LocalVoice {
     try {
       // An explicit device avoids a muted virtual/default communications input.
       // Leave processing settings to the device instead of forcing noise filters.
-      const stream = await navigator.mediaDevices.getUserMedia({audio: deviceId ? {deviceId: {exact: deviceId}} : true});
+      let selectedId = deviceId;
+      const chooseMic = async () => {
+        if (!navigator.mediaDevices.enumerateDevices) return '';
+        const inputs = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === 'audioinput' && !['default','communications',''].includes(d.deviceId));
+        if (selectedId && inputs.some(d => d.deviceId === selectedId)) return selectedId;
+        const physical = inputs.filter(d => !/camo|virtual|stereo mix|loopback|cable/i.test(d.label));
+        return (physical.find(d => /headset|usb/i.test(d.label)) || physical.find(d => /realtek|microphone array|built.in|internal/i.test(d.label)))?.deviceId || selectedId;
+      };
+      try { selectedId = await chooseMic(); } catch (_) {}
+      let stream;
+      try { stream = await navigator.mediaDevices.getUserMedia({audio: selectedId ? {deviceId: {exact: selectedId}} : true}); }
+      catch (error) {
+        if (error.name !== 'OverconstrainedError' || !navigator.mediaDevices.enumerateDevices) throw error;
+        selectedId = ''; selectedId = await chooseMic();
+        stream = await navigator.mediaDevices.getUserMedia({audio: selectedId ? {deviceId: {exact: selectedId}} : true});
+      }
+      // Device labels may become available only after microphone permission.
+      if (!deviceId && !selectedId) {
+        try {
+          const physicalId = await chooseMic();
+          if (physicalId && physicalId !== stream.getAudioTracks()[0]?.getSettings?.().deviceId) {
+            const physicalStream = await navigator.mediaDevices.getUserMedia({audio: {deviceId: {exact: physicalId}}});
+            stream.getTracks().forEach(track => track.stop()); stream = physicalStream;
+          }
+        } catch (_) { /* Keep the already-permitted microphone if switching fails. */ }
+      }
       // A late permission decision must not reopen the mic after pause/end.
       if (generation !== this.generation) {
         stream.getTracks().forEach(track => track.stop());
@@ -99,7 +126,8 @@ class LocalVoice {
       this.stopReason = 'manual';
       this.detector = new SpeechEndDetector();
       this.autoStopAvailable = false;
-      this.hooks.onDevice?.(stream.getAudioTracks()[0]?.label || 'Selected microphone');
+      const activeTrack = stream.getAudioTracks()[0];
+      this.hooks.onDevice?.(activeTrack?.label || 'Selected microphone', activeTrack?.getSettings?.().deviceId || selectedId);
       this.hooks.onDevicesChanged?.();
       const mime = ['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/mp4']
         .find(type => MediaRecorder.isTypeSupported(type));
@@ -134,6 +162,11 @@ class LocalVoice {
       const started = Date.now();
       const tick = () => {
         const seconds = Math.floor((Date.now() - started) / 1000);
+        if (seconds >= 6 && this.audioContext?.state === 'running' && this.peakSignal < 0.0005) {
+          this.cancel();
+          this.hooks.onStatus('No microphone signal. In Devices, select your laptop / Realtek or headset microphone, unmute it, then press Speak.', true);
+          return;
+        }
         const signal = seconds >= 3 && this.audioContext?.state === 'running' && this.peakSignal < 0.0005 ?
           'No mic signal yet. Speak closer, check mute, or cancel and choose another microphone.' :
           this.autoStopAvailable ? (this.detector.heardSpeech ?
@@ -240,3 +273,39 @@ class LocalVoice {
   }
 }
 window.LocalVoice = LocalVoice;
+
+// One speaker at a time; every wait and microphone restart is cancellable.
+class PartnerTurnFlow {
+  constructor(hooks) { this.hooks = hooks; this.generation = 0; this.active = false; }
+  cancel() {
+    this.generation++;
+    clearTimeout(this.restartTimer);
+    this.hooks.cancelPlayback();
+    this.active = false;
+    this.hooks.onActive(false);
+  }
+  async run(replies, autoListen = false) {
+    this.cancel();
+    const generation = this.generation;
+    const current = () => generation === this.generation && this.hooks.canContinue();
+    this.active = true; this.hooks.onActive(true);
+    let completed = false;
+    try {
+      for (const reply of replies) {
+        if (!current()) return;
+        this.hooks.onReply(reply);
+        if (!await this.hooks.play(reply) || !current()) return;
+      }
+      completed = true;
+    } finally {
+      if (generation === this.generation) {
+        this.active = false; this.hooks.onActive(false);
+        if (completed && autoListen && current()) {
+          // Let the speaker output settle before capturing the user's next turn.
+          this.restartTimer = setTimeout(() => { if (current()) this.hooks.listen(); }, 400);
+        }
+      }
+    }
+  }
+}
+window.PartnerTurnFlow = PartnerTurnFlow;

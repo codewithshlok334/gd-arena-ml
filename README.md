@@ -12,6 +12,7 @@ Choose a topic, share your perspective, and practise with three virtual partners
 - **Three virtual practice partners:** Aanya builds the case, Kabir challenges assumptions, and Riya asks for clarity.
 - **Voice or text input**, with microphone selection, an input-level meter and audio upload.
 - **Automatic pause detection:** recording ends after two seconds of silence following speech. Eligible English points can be shared automatically.
+- **Automatic speaking turns:** after an English voice contribution, Aanya, Kabir and Riya speak one at a time, then the microphone reopens for the user. Pause, Stop playback, leaving the tab or disabling Automatic speaking turns cancels the flow. Hindi/Hinglish still requires English review.
 - **Optional webcam:** starts off and shows an avatar until the user enables it. Camera preview stays on the device.
 - **English, Hindi and Hinglish speech transcription.** Hindi/Hinglish requires a manually reviewed English version before stance analysis.
 - **Session timer, spoken replies, feedback, recap and transcript download.**
@@ -52,6 +53,20 @@ python3 -m venv .venv
 ```
 
 Select the project environment in VS Code using **Python: Select Interpreter**. See [the setup guide](VS_CODE_START_HERE.txt) for debugging, retraining and troubleshooting.
+
+## Deploy on Render
+
+[Deploy GD Arena on Render](https://render.com/deploy?repo=https://github.com/codewithshlok334/gd-arena-ml)
+
+Open the link while signed in to Render, review the `gd-arena-ml` service on the **Free** plan, and choose **Deploy Blueprint**. The included `render.yaml` configures Python 3.12, installs dependencies, downloads the pinned Whisper tiny model during the build, and starts the app on Render's assigned port. Retraining and API keys are not required.
+
+Once the service is **Live**, open the HTTPS URL shown in its dashboard. Choose a topic, allow microphone access, select your laptop/headset microphone, and press **Speak**. Camera access is optional. Audio is sent to your Render service for transcription and is not saved; camera video stays in the browser.
+
+Render's Free instance sleeps after 15 minutes without traffic and can take about a minute to wake. Its limited CPU and 512 MB memory make this a small demo deployment: use short voice turns, one speaker at a time, and allow extra time for transcription. Actual voice latency and memory use need checking after deployment. If Render reports out-of-memory errors, review a larger plan before upgrading; this Blueprint never selects paid compute.
+
+Later pushes to `main` trigger deployments automatically. Local edits must still be committed and pushed to GitHub first. See [Render's Free limits](https://render.com/docs/free) and [Blueprint documentation](https://render.com/docs/blueprint-spec).
+
+For manual **New → Web Service** setup, use Python, branch `main`, build command `pip install -r requirements.txt && python setup_voice.py`, start command `python app.py --host 0.0.0.0 --port $PORT`, health check `/api/health`, and the Free instance. The repository's `.python-version` selects Python 3.12. Apply the environment variables from `render.yaml` as well.
 
 ## How it works
 
@@ -148,6 +163,7 @@ node tests/test_voice.cjs
 node tests/test_mic_errors.cjs
 node tests/test_camera.cjs
 node tests/test_frontend_bundle.cjs
+node tests/test_auto_round.cjs
 ```
 
 ## Microphone and webcam
