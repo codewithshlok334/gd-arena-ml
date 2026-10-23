@@ -22,7 +22,7 @@ class SpeechEndDetector {
     } else if (rms < threshold * 0.7) {
       this.noiseFloor = this.noiseFloor * 0.98 + rms * 0.02;
     }
-    return this.heardSpeech && now - this.lastVoiceAt >= 2000;
+    return this.heardSpeech && now - this.lastVoiceAt >= 1500;
   }
 }
 
@@ -170,8 +170,8 @@ class LocalVoice {
         const signal = seconds >= 3 && this.audioContext?.state === 'running' && this.peakSignal < 0.0005 ?
           'No mic signal yet. Speak closer, check mute, or cancel and choose another microphone.' :
           this.autoStopAvailable ? (this.detector.heardSpeech ?
-            'Listening. A 2-second quiet pause finishes your point.' :
-            'Start speaking. Recording will stop after a 2-second quiet pause.') :
+            'Listening. A 1.5-second quiet pause finishes your point.' :
+            'Start speaking. Recording will stop after a 1.5-second quiet pause.') :
             'Press Stop & transcribe when finished. Automatic pause detection is unavailable in this browser.';
         this.hooks.onStatus(`Recording ${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')} · ${signal}`);
       };

@@ -89,9 +89,13 @@ class SpeechService:
             raise SpeechUnavailable('Another clip is being transcribed. Try again in a moment.')
         try:
             audio = self.decode(data)
+            # English discussion needs text only. Avoid beam search, timestamp
+            # prediction and repeated temperature retries on the small CPU host.
+            options = ({'beam_size': 1, 'best_of': 1, 'temperature': 0.0,
+                        'without_timestamps': True} if language != 'hi-IN' else {'beam_size': 3})
             segments, info = self.model.transcribe(
                 audio, language='hi' if language == 'hi-IN' else 'en', task='transcribe',
-                beam_size=3, condition_on_previous_text=False, vad_filter=True,
+                **options, condition_on_previous_text=False, vad_filter=True,
                 vad_parameters={'min_silence_duration_ms': 500},
                 no_speech_threshold=0.6)
             text = ' '.join(segment.text.strip() for segment in segments).strip()

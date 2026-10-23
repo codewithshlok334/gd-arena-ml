@@ -69,7 +69,7 @@ function shareFixture() {
   f.audio(0, 5000); assert.equal(f.voice.phase, 'recording'); assert.equal(f.log.requests.length, 0);
   f.audio(0.05, 80); f.audio(0, 3000); assert.equal(f.voice.phase, 'recording'); checks++;
   f.audio(0.04, 1000); f.audio(0, 1200); assert.equal(f.voice.phase, 'recording');
-  f.audio(0.04, 600); f.audio(0, 1980); assert.equal(f.voice.phase, 'recording'); checks++;
+  f.audio(0.04, 600); f.audio(0, 1480); assert.equal(f.voice.phase, 'recording'); checks++;
   f.audio(0, 40); await tick(); await tick();
   assert.equal(f.voice.phase, 'idle'); assert.equal(f.log.requests.length, 1);
   assert.equal(f.log.ready[0].completion.autoShare, true); assert.equal(f.log.ready[0].completion.reason, 'silence');
@@ -77,14 +77,14 @@ function shareFixture() {
   f.audio(0, 4000); assert.equal(f.log.requests.length, 1); checks++;
 
   f = fixture(); await f.voice.start('en-IN', '', {autoShare: false});
-  f.audio(0.04, 1000); f.audio(0, 2020); await tick(); await tick();
+  f.audio(0.04, 1000); f.audio(0, 1520); await tick(); await tick();
   assert.equal(f.log.ready[0].completion.autoShare, false); checks++;
   f = fixture(); await f.voice.start('en-IN', '', {autoShare: true});
   f.voice.stop(); await tick(); await tick(); assert.equal(f.log.ready[0].completion.autoShare, false); checks++;
 
   f = fixture(); let finish;
   f.scope.fetch = () => new Promise(resolve => { finish = resolve; });
-  await f.voice.start('en-IN', '', {autoShare: true}); f.audio(0.04, 1000); f.audio(0, 2020);
+  await f.voice.start('en-IN', '', {autoShare: true}); f.audio(0.04, 1000); f.audio(0, 1520);
   await tick(); f.voice.cancel(); finish({ok: true, json: async () => ({text: 'Late words should never share.'})});
   await tick(); assert.equal(f.log.ready.length, 0); assert.equal(f.log.texts.length, 0); checks++;
 
@@ -116,7 +116,7 @@ function shareFixture() {
   }
   console.log(JSON.stringify({passed: true, checks, physical_microphone_tested: false,
     coverage: ['Initial silence and brief noise ignored', 'Short pause and resumed speech do not stop',
-      'Two-second silence stops once and releases mic', 'Auto-submit waits for idle', 'Review mode and manual stop',
+      '1.5-second silence stops once and releases mic', 'Auto-submit waits for idle', 'Review mode and manual stop',
       'Cancellation discards pending automatic turn', 'Manual fallback without AudioContext',
       'Auto-submit guards: upload, language review, existing draft, short text, pause, end, stale session, busy']}));
 })().catch(error => { console.error(error); process.exit(1); });
