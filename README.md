@@ -1,6 +1,7 @@
 # GD Arena
 
 **ML-based group discussion practice with voice input and a meeting-style interface.**
+DEPLOYED LINK - https://gd-arena-ml-3ek8.onrender.com/
 
 Choose a topic, share your perspective, and practise with three virtual partners. A trained stance classifier analyses whether your point supports, opposes, or stays neutral toward the selected topic proposition.
 
